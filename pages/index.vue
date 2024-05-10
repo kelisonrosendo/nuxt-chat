@@ -2,13 +2,8 @@
   <div class="h-screen flex items-center justify-center">
     <UCard :ui="{ base: 'w-[400px]' }">
       <template #header>
-        <h1
-          class="flex items-center justify-center gap-2 font-medium text-lg text-blue-600"
-        >
-          <UIcon
-            name="i-heroicons-chat-bubble-bottom-center-text"
-            class="text-xl"
-          />
+        <h1 class="flex items-center justify-center gap-2 font-medium text-lg">
+          <UIcon dynamic name="i-ph:chat-centered-text-duotone" size="22" />
           Tech Chat
         </h1>
       </template>
