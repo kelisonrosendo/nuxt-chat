@@ -17,5 +17,13 @@ export default defineAppConfig({
         size: "lg",
       },
     },
+    card: {
+      header: {
+        background: "bg-zinc-200",
+      },
+      footer: {
+        background: "bg-zinc-200",
+      },
+    },
   },
 });

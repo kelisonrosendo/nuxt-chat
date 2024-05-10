@@ -1,5 +1,5 @@
 <template>
-  <UContainer>
+  <UContainer :ui="{ base: 'py-8' }">
     <slot />
   </UContainer>
 </template>

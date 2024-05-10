@@ -1,11 +1,6 @@
 <template>
   <div class="h-screen flex items-center justify-center">
-    <UCard
-      :ui="{
-        base: 'w-[400px]',
-        header: { background: 'bg-zinc-100' },
-      }"
-    >
+    <UCard :ui="{ base: 'w-[400px]' }">
       <template #header>
         <h1
           class="flex items-center justify-center gap-2 font-medium text-lg text-blue-600"
