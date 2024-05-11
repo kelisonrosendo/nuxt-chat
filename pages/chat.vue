@@ -33,7 +33,7 @@
                       label="Sim"
                       variant="outline"
                       size="sm"
-                      @click="onLeave"
+                      @click="navigateTo('/')"
                     />
 
                     <UButton
@@ -56,7 +56,9 @@
               <UCard
                 :ui="{
                   body: {
-                    background: `${user.currentUser && 'bg-blue-200'}`,
+                    background: `${
+                      user.username === currentUser && 'bg-blue-200'
+                    }`,
                     padding: 'p-2 sm:p-2',
                   },
                 }"
@@ -84,10 +86,10 @@
           <div
             v-for="(message, index) in messages"
             :key="index"
-            :class="getMessageClass(message.userType)"
+            :class="getMessageClass(message.username)"
           >
             <UAlert
-              :class="getAlertClass(message.userType)"
+              :class="getAlertClass(message.username)"
               :title="`${message.username} - ${message.time}`"
             >
               <template #description>
@@ -102,6 +104,7 @@
             trailing
             icon="i-heroicons-paper-airplane"
             placeholder="Digite uma mensagem e pressione enter"
+            @keyup.enter="sendMessage"
           />
         </template>
       </UCard>
@@ -110,6 +113,7 @@
 </template>
 
 <script setup lang="ts">
+import { io, type Socket } from "socket.io-client";
 const route = useRoute();
 const toast = useToast();
 
@@ -117,7 +121,6 @@ type User = {
   id: string;
   username: string;
   room: string;
-  currentUser: boolean;
 };
 
 type Message = {
@@ -128,73 +131,41 @@ type Message = {
   userType: string;
 };
 
-type UserType = {
-  admin: string;
-  external: string;
-  local: string;
+const users = ref<User[]>([]);
+const messages = ref<Message[]>([]);
+const currentRoom = ref<string>("");
+const currentUser = ref<string>("");
+const socket = ref<Socket>();
+
+const getMessageClass = (user: string) => {
+  if (user === "Admin") {
+    return "flex justify-center";
+  }
+
+  if (user === route.query.username) {
+    return "flex justify-end";
+  }
+
+  return "flex justify-start";
 };
 
-const users = ref<User[]>([
-  {
-    id: "1",
-    username: "kelison.rocha",
-    room: "Vue",
-    currentUser: true,
-  },
-  {
-    id: "2",
-    username: "john.doe",
-    room: "Vue",
-    currentUser: false,
-  },
-]);
+const getAlertClass = (user: string) => {
+  if (user === "Admin") {
+    return "w-1/2 bg-red-200";
+  }
 
-const messages = ref<Message[]>([
-  {
-    username: "admin",
-    time: "14:28",
-    text: "<span class='font-medium'>kelison.rocha</span> entrou no chat",
-    room: "Vue",
-    userType: "admin",
-  },
-  {
-    username: "kelison.rocha",
-    time: "14:30",
-    text: "Olá, bom dia!",
-    room: "Vue",
-    userType: "local",
-  },
-  {
-    username: "john.doe",
-    time: "14:34",
-    text: "Olá, bom dia, tudo certo?",
-    room: "Vue",
-    userType: "external",
-  },
-]);
+  if (user === route.query.username) {
+    return "w-1/2 bg-blue-200";
+  }
 
-const getMessageClass = (userType: string) => {
-  const types = {
-    admin: "flex justify-center",
-    external: "flex justify-start",
-    local: "flex justify-end",
-  };
-
-  return types[userType as keyof UserType];
-};
-
-const getAlertClass = (userType: string) => {
-  const types = {
-    admin: "w-1/2 bg-red-200",
-    external: "w-1/2 bg-zinc-200",
-    local: "w-1/2 bg-blue-200",
-  };
-
-  return types[userType as keyof UserType];
+  return "w-1/2 bg-zinc-200";
 };
 
 onMounted(() => {
   const { username, room } = route.query as Partial<User>;
+
+  // @ts-ignore
+  currentUser.value = username;
 
   if (!username || !room) {
     toast.add({
@@ -204,9 +175,31 @@ onMounted(() => {
     });
     navigateTo("/");
   }
+
+  socket.value = io({
+    path: "/api/socket.io",
+  });
+
+  socket.value?.emit("joinRoom", { username, room });
+
+  socket.value?.on("message", (response: Message) => {
+    messages.value.push(response);
+  });
+
+  socket.value?.on("roomUsers", (response: { room: string; users: User[] }) => {
+    currentRoom.value = response.room;
+    users.value = response.users;
+  });
 });
 
-const onLeave = () => {
-  navigateTo("/");
+onBeforeUnmount(() => {
+  socket.value?.disconnect();
+});
+
+const sendMessage = (event: { target: { value: string } }) => {
+  if (event.target.value) {
+    socket.value?.emit("chatMessage", event.target.value);
+    event.target.value = "";
+  }
 };
 </script>

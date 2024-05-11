@@ -5,6 +5,5 @@ export function createMessage(username: string, text: string) {
     username,
     text,
     time: moment().format("h:mm"),
-    userType: "admin",
   };
 }

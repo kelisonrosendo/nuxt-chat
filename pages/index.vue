@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex items-center justify-center">
+  <div class="h-[calc(100vh-64px)] flex items-center justify-center">
     <UCard :ui="{ base: 'w-[400px]' }">
       <template #header>
         <h1 class="flex items-center justify-center gap-2 font-medium text-lg">
