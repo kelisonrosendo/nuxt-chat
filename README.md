@@ -1,75 +1,13 @@
-# Nuxt 3 Minimal Starter
+### 💻 Projeto
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Projeto básico de um chat onde o usuário coloca o seu nome, seleciona uma das salas disponíveis e inicia uma conversa sobre o assunto. Foi desenvolvido utilizando Nuxt 3 + Typescript, Nuxt UI como lib de componentes (já vem com tailwind configurado) e o Socket.io para realizar a comunicação dentro da aplicação.
 
-## Setup
+![nuxt-chat](https://github.com/kelisonrosendo/nuxt-chat/blob/master/public/chat-example.gif)
 
-Make sure to install the dependencies:
+### 🚀 Tecnologias
 
-```bash
-# npm
-npm install
+Esse projeto foi desenvolvido com as seguintes tecnologias:
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- [Nuxt 3](https://nuxt.com/)
+- [Nuxt UI](https://ui.nuxt.com/)
+- [Socket.io](https://socket.io/)
